@@ -568,6 +568,7 @@ inline __attribute__((always_inline)) int input_number_digit_by_digit(const char
     // 시간 표시를 위한 타이머 변수
     int64 last_time_update = 0;
     int input_start_x, input_start_y;
+    short mode = 0;
 
     while (pos <= len) {
         // 100ms마다 시간 업데이트 (커서 위치 복원 포함)
@@ -614,7 +615,7 @@ inline __attribute__((always_inline)) int input_number_digit_by_digit(const char
                 pos--;
                 printf("\b \b");
                 fflush(stdout);
-            }
+            } else mode = 0;
             continue;
         }
 
@@ -633,7 +634,9 @@ inline __attribute__((always_inline)) int input_number_digit_by_digit(const char
             bool correct_forward = (pos < len && ch == correct_answer[pos]);
             bool correct_backward = (pos < len && ch == correct_answer[len - 1 - pos]);
 
-            if (correct_forward || correct_backward) {
+            mode = mode == 0 ? correct_forward - correct_backward : mode; // 1: 정방향, -1: 역방향, 0: 둘 다 맞거나 둘 다 맞지 않음
+
+            if (mode >= 0 && correct_forward || mode <= 0 && correct_backward) {
                 char ch_str[2] = {ch, '\0'};
                 print_colored(ch_str, LightGreen);
             } else {
