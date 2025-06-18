@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#if !defined(__WIN64) && defined(__W64) || defined(_WIN64) || defined(_M_X64) || defined(_M_AMD64) || defined(__WIN32) || defined(_WIN32) || defined(_MSC_VER)
+#if !defined(__WIN64) && (defined(__W64) || defined(_WIN64) || defined(_M_X64) || defined(_M_AMD64) || defined(__WIN32) || defined(_WIN32) || defined(_MSC_VER))
 #define __WIN64 1
 #endif
 
@@ -155,11 +155,11 @@ int s;
 
 /* 아키텍쳐 감지를 위한 매크로 정의입니다. 어셈블리어는 CPU 아키텍쳐에 따라 그 문법이 달라지기 때문에 해당 내용을 적용했습니다. */
 
-#if !defined(__x86_64__) && defined(_M_X64) || defined(_M_AMD64) || defined(__amd64__)
+#if !defined(__x86_64__) && (defined(_M_X64) || defined(_M_AMD64) || defined(__amd64__))
 #define __x86_64__ 1
 #endif
 
-#if !defined(__ARM64__) && defined(_M_ARM64) || defined(__arm64__) || defined(__aarch64__)
+#if !defined(__ARM64__) && (defined(_M_ARM64) || defined(__arm64__) || defined(__aarch64__))
 #define __ARM64__ 1
 #endif
 
