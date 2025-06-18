@@ -132,24 +132,31 @@ int s;
 
 /* 색상 관련 매크로 정의 */
 
+#ifdef __WIN64
 #define stdHandle GetStdHandle(STD_OUTPUT_HANDLE)
 #define SetColor(color) SetConsoleTextAttribute(stdHandle, color)
-#define Black 0
-#define Blue 1
-#define Green 2
-#define BlueGreen 3
+
 #define Red 4
-#define Purple 5
+#define Green 2
+#define Blue 1
 #define Yellow 6
-#define White 7
-#define Gray 8
-#define LightBlue 9
 #define LightGreen 10
-#define LightBlueGreen 11
 #define LightRed 12
-#define LightPurple 13
+#define LightBlue 9
 #define LightYellow 14
-#define LightWhite 15
+#define White 7
+#else
+#define Red 31
+#define Green 32
+#define Blue 34
+#define Yellow 33
+#define LightGreen 92
+#define LightRed 91
+#define LightBlue 94
+#define LightYellow 93
+#define White 0
+#define SetColor(color) printf("\033[%dm", color)
+#endif
 
 // ===============================================================
 
@@ -433,21 +440,9 @@ inline __attribute__((always_inline)) void move_cursor(int x, int y) {
 
 // 색상 출력 함수
 inline __attribute__((always_inline)) void print_colored(const char* text, int color) {
-#ifdef __WIN64
     SetColor(color);
     printf("%s", text);
     SetColor(White);
-#else
-    switch(color) {
-        case Red: printf("\033[31m%s\033[0m", text); break;
-        case Green: printf("\033[32m%s\033[0m", text); break;
-        case Yellow: printf("\033[33m%s\033[0m", text); break;
-        case Blue: printf("\033[34m%s\033[0m", text); break;
-        case LightRed: printf("\033[91m%s\033[0m", text); break;
-        case LightGreen: printf("\033[92m%s\033[0m", text); break;
-        default: printf("%s", text); break;
-    }
-#endif
 }
 
 // 경과 시간을 포맷하여 반환하는 함수 (오버플로우 방지)
