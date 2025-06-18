@@ -383,6 +383,13 @@ void enable_raw_mode() {
 void disable_raw_mode() {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
 }
+#else
+void enable_raw_mode() {
+    CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+    cursorInfo.dwSize = 1;
+    cursorInfo.bVisible = 0;
+    SetConsoleCursorInfo(stdHandle, &cursorInfo);
+}
 #endif
 
 // 키 입력 받기 (1문자씩)
@@ -770,7 +777,7 @@ inline __attribute__((always_inline)) void play_game() {
 
 // ===============================================================
 
-int main() {
+int main(void) {
     // 한글 인코딩 설정
 #ifdef __WIN64
     system("chcp 65001 > nul");
@@ -778,9 +785,7 @@ int main() {
 
     // 서버 연결
     socket_init("103.244.118.110", 13579);
-#ifndef __WIN64
     enable_raw_mode();
-#endif
 
     // 타이틀 화면 표시
     print_title();
